@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hayat: Source de Vie | حياة: مصدر الحياة</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    
+    <style>
+        /* Custom Colors & Typography */
+        :root {
+            --hayat-blue: #0077b6; /* Deep, Fresh Water Blue */
+            --hayat-orange: #ff8800; /* Vibrant Life Orange */
+            --hayat-white: #ffffff;
+            --hayat-dark: #023e8a; /* Dark Blue for contrast */
+            --hayat-light-gray: #f8f9fa; /* Background color for benefits section */
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--hayat-white);
+            color: var(--hayat-dark);
+        }
+
+        /* Utility Classes using custom colors */
+        .bg-hayat-blue { background-color: var(--hayat-blue) !important; }
+        .text-hayat-blue { color: var(--hayat-blue) !important; }
+        .text-hayat-orange { color: var(--hayat-orange) !important; }
+        
+        .object-cover {
+            object-fit: cover;
+        }
+
+        /* --- Navbar colors for light theme (White Background / Blue Text) --- */
+        .navbar-light .navbar-brand,
+        .navbar-light .navbar-nav .nav-link {
+            color: var(--hayat-dark);
+            font-weight: 600;
+        }
+        .navbar-light .navbar-nav .nav-link:hover,
+        .navbar-light .navbar-nav .nav-link.active {
+            color: var(--hayat-blue);
+        }
+        .navbar-light .navbar-toggler {
+            border-color: rgba(2, 62, 138, 0.1); 
+        }
+
+        .btn-hayat-orange {
+            background-color: var(--hayat-orange);
+            color: var(--hayat-dark);
+            border: none;
+            padding: 0.75rem 2rem;
+            border-radius: 50px;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(255, 136, 0, 0.4);
+        }
+        .btn-hayat-orange:hover {
+            background-color: #e67e00;
+            color: var(--hayat-white);
+            box-shadow: 0 6px 20px rgba(255, 136, 0, 0.6);
+            transform: translateY(-2px);
+        }
+
+        /* Shake/Slide Effect for Bottles */
+        @keyframes shake-slide {
+            0% { transform: translateY(0) rotate(0deg); }
+            25% { transform: translateY(-5px) rotate(-1deg); }
+            50% { transform: translateY(5px) rotate(1deg); }
+            75% { transform: translateY(-3px) rotate(-0.5deg); }
+            100% { transform: translateY(0) rotate(0deg); }
+        }
+        .bottle-shaking {
+            filter: drop-shadow(0 0 25px rgba(0, 0, 0, 0.3)); /* Unified shadow */
+            transition: transform 0.5s ease-in-out;
+        }
+        .bottle-shaking-animation {
+            animation: shake-slide 3.5s infinite ease-in-out;
+        }
+        
+        /* Hero Specific Styling */
+        #hero {
+            background: linear-gradient(135deg, var(--hayat-blue) 0%, #48cae4 100%);
+            /* Reduced from 100vh for a tighter fit */
+            min-height: 120vh; 
+            color: var(--hayat-white);
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .hero-title {
+            font-size: clamp(2.5rem, 8vw, 5rem);
+            font-weight: 900;
+            line-height: 1.1;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        .hero-subtitle {
+            font-size: clamp(1.2rem, 3vw, 2.5rem);
+            font-weight: 300;
+        }
+
+        /* RTL styling for Arabic content */
+        .text-rtl {
+            text-align: right;
+            direction: rtl;
+        }
+
+        /* Hero Image/Bottle Container Setup */
+        .hero-visual-container {
+            /* Set a max height for mobile to prevent overflow */
+            min-height: 400px; 
+            height: 100%;
+            position: relative;
+            display: flex; /* Ensure flex is used for positioning */
+            justify-content: center; /* Center on mobile */
+            align-items: center;
+        }
+        
+        /* Main Bottle Styling (1L) */
+        .main-bottle {
+            height: 450px; /* Bigger for mobile */
+            z-index: 10;
+            transform: rotate(-10deg); /* Initial tilt for hero bottle */
+        }
+        
+        @media (min-width: 992px) {
+            .hero-text-container {
+                text-align: right !important;
+            }
+            .hero-visual-container {
+                height: 700px; /* Specific height for desktop positioning */
+                justify-content: center !important;
+            }
+            .main-bottle {
+                height: 650px; /* Taller and much bigger on desktop */
+                margin-left: -50px; 
+                margin-right: 0;
+            }
+        }
+        
+        /* Social Icon Styling in Hero */
+        .hero-social-icon {
+            font-size: 1.5rem;
+            margin: 0 0.5rem;
+            color: var(--hayat-white);
+            transition: color 0.3s ease;
+        }
+        .hero-social-icon:hover {
+            color: var(--hayat-orange);
+        }
+
+        /* FIX: OPTIMIZED SECTION PADDING */
+        .section-padding-safe {
+            padding-top: 6rem; 
+            padding-bottom: 8rem;
+            position: relative; /* Ensure position for absolute background images */
+            overflow: hidden; /* Hide overflowing background elements */
+        }
+        
+        /* Special case for Benefits section which uses the largest negative margin (-150px) */
+        #benefits.section-padding-safe {
+            padding-top: 9rem; 
+            padding-bottom: 8rem; /* Increased bottom padding */
+        }
+        
+        /* Special case for Partnership and Footer which use negative margin but don't need huge padding */
+        #partnership.section-padding-safe,
+        footer {
+            padding-top: 5rem !important; /* Standard large padding on top for these sections */
+            padding-bottom: 8rem; /* Increased bottom padding */
+        }
+
+
+        /* Smooth Transition Styling (Curved separators) */
+        #benefits {
+            background-color: var(--hayat-light-gray);
+            position: relative;
+            margin-top: -150px; /* Negative margin to pull it up over the curve */
+            border-radius: 150px 150px 0 0; 
+            z-index: 2; 
+            box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.05); 
+        }
+        
+        #source {
+            background-color: var(--hayat-white);
+            position: relative;
+            margin-top: -100px; 
+            border-radius: 100px 100px 0 0; 
+            z-index: 2; 
+            box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.05);
+        }
+        
+        #products {
+            background-color: var(--hayat-light-gray);
+            position: relative;
+            margin-top: -100px; 
+            border-radius: 100px 100px 0 0; 
+            z-index: 2; 
+            box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.05);
+            overflow: hidden; 
+        }
+
+        /* Styling for side visual bottles (Subtle background effect) */
+        .side-bottle {
+            position: absolute;
+            height: 700px; 
+            z-index: 1; 
+            opacity: 0.2; /* Reduced opacity for more subtlety */
+            pointer-events: none; 
+            filter: drop-shadow(0 0 10px rgba(0, 0, 0, 0.1));
+        }
+
+        /* 1.5L Bottle on the Right (Arabic layout) */
+        .bottle-right {
+            top: -100px; 
+            right: -120px; 
+            transform: rotate(5deg);
+        }
+        /* 0.5L Bottle on the Left (Arabic layout) */
+        .bottle-left {
+            top: -100px; 
+            left: -120px; 
+            transform: rotate(-5deg);
+        }
+
+        /* NEW: Specific positioning for background bottles in different sections */
+        #benefits .bg-bottle-1 {
+            height: 500px;
+            top: 20%;
+            left: -150px;
+            transform: rotate(-20deg);
+            opacity: 0.1;
+        }
+        #source .bg-bottle-2 {
+            height: 600px;
+            bottom: -50px;
+            right: -180px;
+            transform: rotate(15deg);
+            opacity: 0.15;
+        }
+        #partnership .bg-bottle-3 {
+            height: 700px;
+            top: -100px;
+            left: -200px;
+            transform: rotate(-10deg);
+            opacity: 0.1; /* Even more subtle against blue */
+        }
+        
+        @media (max-width: 991px) {
+            /* NEW FIX: Adjust Hero for mobile */
+            #hero {
+                /* Reduce min-height significantly on mobile to prevent massive scroll */
+                min-height: 100vh;
+                /* Align items to the *top* on mobile so the text isn't pushed to the center */
+                align-items: flex-start; 
+                padding-top: 100px; /* Push content down past the fixed navbar */
+                padding-bottom: 50px; /* Add some space at the bottom of the section */
+            }
+            .hero-visual-container {
+                /* Ensure the bottle takes less space on mobile, moving up text */
+                min-height: 350px;
+                height: 350px;
+            }
+            .main-bottle {
+                /* Scale down the main bottle slightly on smaller devices */
+                height: 380px; 
+            }
+            
+            /* Existing mobile styles */
+            .side-bottle,
+            .bg-bottle-1,
+            .bg-bottle-2,
+            .bg-bottle-3 {
+                display: none; 
+            }
+            /* Adjust product card image height for mobile for better fit */
+            .product-card img {
+                height: 180px !important; 
+            }
+            /* Adjust mobile padding for benefits section */
+            #benefits.section-padding-safe {
+                padding-top: 8rem; 
+            }
+            /* Adjust generic mobile padding */
+            .section-padding-safe {
+                padding-top: 5rem;
+                padding-bottom: 6rem;
+            }
+        }
+
+
+        /* Partnership Section follows Products (light-gray to blue transition) */
+        #partnership {
+            background-color: var(--hayat-blue);
+            position: relative;
+            margin-top: -100px;
+            border-radius: 100px 100px 0 0;
+            z-index: 2;
+        }
+
+        /* Footer follows Partnership (blue to dark-blue transition) */
+        footer {
+            background-color: var(--hayat-dark);
+            position: relative;
+            margin-top: -100px;
+            border-radius: 100px 100px 0 0;
+            z-index: 2;
+        }
+
+        /* Symbol Card Styling */
+        .symbol-card {
+            border: none;
+            border-radius: 1.5rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            text-align: right !important; 
+            direction: rtl; 
+        }
+        .symbol-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+        }
+
+    </style>
+</head>
+<body data-bs-spy="scroll" data-bs-target="#mainNav" data-bs-offset="50">
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-white fixed-top shadow-sm" id="mainNav">
+        <div class="container">
+            <a class="navbar-brand fw-bold fs-3 d-flex align-items-center text-hayat-dark" href="#hero" style="direction: ltr;">
+                <img src="images/logo.png" alt="Hayat Water Logo" width ="100" height="60" class="me-2" onerror="this.onerror=null; this.src='https://placehold.co/60x60/0077b6/ffffff?text=H';"> HAYAT
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="#hero">الرئيسية</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#benefits">الفوائد</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#source">المصدر</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#products">المنتجات</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#partnership">الشراكة</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#contact">اتصل بنا</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <header id="hero" class="d-flex align-items-center">
+        <div class="container">
+            <div class="row align-items-center flex-row-reverse justify-content-center"> 
+                
+                <div class="col-lg-5 z-2 p-4 hero-text-container text-rtl" data-aos="fade-right">
+                    <h1 class="hero-title mb-4" style="direction: ltr; text-align: right;">
+                        HAYAT:Source de Vie.
+                    </h1>
+                    <p class="lead mb-3 fs-5 fw-light text-white" data-aos="fade-right" data-aos-delay="100">
+                        في كل قطرة من **مياه الحياة نقاء الطبيعة**، وصفاء لا مثيل له.
+                    </p>
+                    <p class="lead mb-5 fs-5 fw-light text-white" data-aos="fade-right" data-aos-delay="200">
+                        انتعاش يرافقك في كل لحظة، وطاقة تُجدد يومك.
+                    </p>
+                    <a href="#products" class="btn btn-hayat-orange btn-lg mb-4" data-aos="zoom-in" data-aos-delay="300">اكتشف منتجاتنا <i class="fas fa-arrow-left me-2"></i></a>
+                    
+                    <div class="mt-4 text-center text-lg-end" data-aos="fade-up" data-aos-delay="500">
+                        <h5 class="fw-bold mb-3 text-white">تابعونا على</h5>
+                        <a href="https://web.facebook.com/hayat.source.de.vie" class="hero-social-icon" aria-label="فيسبوك"><i class="fab fa-facebook-f fa-lg"></i></a>
+                        <a href="https://www.instagram.com/hayat_source_de_vie?utm_source=ig_web_button_share_sheet&igsh=aGpocXR5b2pjMzU=" class="hero-social-icon" aria-label="انستغرام"><i class="fab fa-instagram fa-lg"></i></a>
+                        <a href="https://www.tiktok.com/@hayat_source_de_vie?_t=ZS-90CHpx0sTEA&_r=1" class="hero-social-icon" aria-label="تيك توك"><i class="fab fa-tiktok fa-lg"></i></a>
+                    </div>
+                </div>
+                
+                <div class="col-lg-7 z-2 hero-visual-container">
+                    
+                    <img 
+                        src="images/one.png" 
+                        alt="Hayat 1 Liter Bottle" 
+                        class="bottle-shaking bottle-shaking-animation main-bottle" 
+                        data-aos="fade-up" 
+                        data-aos-delay="400"
+                        onerror="this.onerror=null; this.src='https://placehold.co/250x650/00b4d8/ffffff?text=1L+HAYAT';"
+                    >
+
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <section id="benefits" class="section-padding-safe">
+        <img 
+            src="images/oneandhalf.png" 
+            alt="Hayat 1.5L Background Visual" 
+            class="side-bottle bg-bottle-1 d-none d-lg-block"
+            onerror="this.onerror=null; this.src='https://placehold.co/250x700/00b4d8/ffffff?text=1.5L';"
+        >
+        <div class="container text-center text-rtl">
+            <h2 class="display-4 fw-bold mb-3 text-hayat-dark" data-aos="zoom-in">صحة، قوة، ونشاط متواصل.</h2>
+            <p class="lead mb-5 text-secondary" data-aos="fade-up">
+                ماء حياة ليس مجرد ماء، بل هو شريكك اليومي في الحفاظ على الصحة والطاقة التي تستحقها.
+            </p>
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="symbol-card p-4 h-100 bg-white shadow-sm" data-aos="fade-up" data-aos-delay="100">
+                        <i class="fas fa-heart text-hayat-orange fa-3x mb-3"></i>
+                        <h3 class="h5 fw-bold text-hayat-blue">الطاقة الحيوية (الكالسيوم)</h3>
+                        <p class="text-muted">
+                            الكالسيوم عنصر أساسي لجسم صحي، و ماء حياة هو الماء اللي تحتاجه. فيه نسبة ممتازة تعطي للجسم القوة والطاقة التي يستحقها يومياً.
+                        </p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="symbol-card p-4 h-100 bg-white shadow-sm" data-aos="fade-up" data-aos-delay="200">
+                        <i class="fas fa-seedling text-hayat-orange fa-3x mb-3"></i>
+                        <h3 class="h5 fw-bold text-hayat-blue">توازن طبيعي</h3>
+                        <p class="text-muted">توازن مثالي في درجة الحموضة (pH) ومعادن أساسية تنعش وتستعيد توازن الجسم بشكل طبيعي.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="symbol-card p-4 h-100 bg-white shadow-sm" data-aos="fade-up" data-aos-delay="300">
+                        <i class="fas fa-tint text-hayat-orange fa-3x mb-3"></i>
+                        <h3 class="h5 fw-bold text-hayat-blue">نقاء استثنائي</h3>
+                        <p class="text-muted">ضمان نقاء لا مثيل له بفضل الترشيح المتقدم دون المساس بمذاق المياه الطبيعي والمنعش.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="source" class="section-padding-safe">
+        <img 
+            src="images/half.png" 
+            alt="Hayat 0.5L Background Visual" 
+            class="side-bottle bg-bottle-2 d-none d-lg-block"
+            onerror="this.onerror=null; this.src='https://placehold.co/250x700/00b4d8/ffffff?text=0.5L';"
+        >
+        <div class="container text-rtl">
+            <div class="row align-items-center flex-row-reverse">
+                
+                <div class="col-lg-6 pe-lg-5" data-aos="fade-left">
+                    <span class="text-uppercase fw-bold text-hayat-orange mb-1 d-block" style="direction: ltr; text-align: right;">The Origin of Purity</span>
+                    <h2 class="display-5 fw-bold text-hayat-dark mb-4">من قمم الجبال البكر.</h2>
+                    <p class="fs-5 text-secondary">
+                        مياه حياة مستخلصة من مصدر طبيعي محمي وعالي في الجبال. يضمن هذا الأصل البعيد جودة لا مثيل لها، حيث تقوم الصخور الطبيعية بترشيح المياه لتمنحها مذاقاً نظيفاً ومنعشاً.
+                    </p>
+                </div>
+
+                <div class="col-lg-6 mb-4 mb-lg-0" data-aos="fade-right">
+                    <img src="images/source.jpg" alt="Natural water source in the mountains" class="w-100 h-100 object-cover" style="border-radius: 1rem;" onerror="this.onerror=null; this.src='https://placehold.co/800x450/415a77/ffffff?text=Source+Image';">
+                    
+                    <div class="mt-4 p-3 bg-hayat-blue text-white fw-bold rounded-pill text-center d-flex flex-column flex-md-row justify-content-center align-items-center shadow-lg" data-aos="zoom-in" data-aos-delay="200">
+                        <span class="d-block d-md-inline-block mx-2 mb-2 mb-md-0">
+                            <i class="fas fa-check-circle text-hayat-orange me-1"></i> مصدر محمي، نقي، ومرتفع.
+                        </span>
+                        <span class="d-block d-md-inline-block mx-2 mb-2 mb-md-0">
+                            <i class="fas fa-check-circle text-hayat-orange me-1"></i> ترشيح طبيعي يضمن أفضل تركيبة معدنية.
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section id="products" class="section-padding-safe">
+        <div class="container text-rtl">
+            
+            <img 
+                src="images/oneandhalf.png" 
+                alt="Hayat 1.5L Background Visual" 
+                class="side-bottle bottle-right d-none d-lg-block"
+                onerror="this.onerror=null; this.src='https://placehold.co/250x700/00b4d8/ffffff?text=1.5L';"
+            >
+            <img 
+                src="images/half.png" 
+                alt="Hayat 0.5L Background Visual" 
+                class="side-bottle bottle-left d-none d-lg-block"
+                onerror="this.onerror=null; this.src='https://placehold.co/250x700/00b4d8/ffffff?text=0.5L';"
+            >
+            
+            <div class="position-relative z-2"> 
+                <h2 class="display-4 fw-bold mb-3 text-hayat-dark text-center" data-aos="zoom-in">اكتشف منتجاتنا</h2>
+                <p class="lead mb-5 text-secondary text-center" data-aos="fade-up">
+                    اختر **الحجم المثالي** الذي يناسب إيقاع حياتك ويُلبي احتياجاتك من الترطيب.
+                </p>
+
+                <div class="row g-5 justify-content-center">
+                    <div class="col-md-4">
+                        <div class="product-card p-4 h-100 bg-white shadow-lg rounded-4 text-center" data-aos="fade-up" data-aos-delay="100">
+                            <img src="images/half.png" alt="Hayat Water 0.5L Bottle" class="img-fluid mb-3" style="height: 250px; filter: drop-shadow(0 5px 15px rgba(0, 0, 0, 0.2));" onerror="this.onerror=null; this.src='https://placehold.co/100x250/00b4d8/ffffff?text=0.5L';">
+                            <h3 class="h4 fw-bold text-hayat-orange">0.5 لتر: رفيق الجيب</h3>
+                            <p class="text-muted">
+                                <span class="fw-bold text-hayat-blue">سهولة الحمل القصوى:</span> مثالية للاجتماعات السريعة، أو حقيبة الجيم، أو التنقلات اليومية. تبقى **رطباً دون الشعور بالثقل**.
+                            </p>
+                            <p class="small text-secondary">الحجم الأفضل للمغامرين النشطين.</p>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="product-card p-4 h-100 bg-white shadow-lg rounded-4 text-center border border-5 border-hayat-blue" data-aos="fade-up" data-aos-delay="200">
+                            <img src="images/oneandhalf.png" alt="Hayat Water 1.5L Bottle" class="img-fluid mb-3" style="height: 350px; filter: drop-shadow(0 5px 15px rgba(0, 0, 0, 0.2));" onerror="this.onerror=null; this.src='https://placehold.co/200x350/00b4d8/ffffff?text=1.5L';">
+                            <h3 class="h4 fw-bold text-hayat-blue">1.5 لتر: مصدر يومك</h3>
+                            <p class="text-muted">
+                                <span class="fw-bold text-hayat-orange">تغطية احتياجاتك الكاملة:</span> الكمية المثالية لضمان بقائك مرتوياً طوال **يوم عمل طويل** أو خلال نشاط رياضي مكثف.
+                            </p>
+                            <p class="small text-secondary">لا تدع العطش يوقفك. اشرب أكثر، أنجز أكثر.</p>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="product-card p-4 h-100 bg-white shadow-lg rounded-4 text-center" data-aos="fade-up" data-aos-delay="300">
+                            <img src="images/one.png" alt="Hayat Water 1L Bottle" class="img-fluid mb-3" style="height: 300px; filter: drop-shadow(0 5px 15px rgba(0, 0, 0, 0.2));" onerror="this.onerror=null; this.src='https://placehold.co/150x300/00b4d8/ffffff?text=1L';">
+                            <h3 class="h4 fw-bold text-hayat-orange">1 لتر: توازن مثالي</h3>
+                            <p class="text-muted">
+                                <span class="fw-bold text-hayat-blue">خيار الوسط الذكي:</span> كافٍ للحفاظ على مستوى ترطيب جيد، ومناسب لوضعه على **مكتب العمل** أو في سيارتك.
+                            </p>
+                            <p class="small text-secondary">توازن بين الكمية وسهولة التعامل.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-center mt-5" data-aos="zoom-in" data-aos-delay="400">
+                    <a href="#contact" class="btn btn-hayat-orange btn-lg">اطلب الآن وتذوق النقاء <i class="fas fa-shipping-fast me-2"></i></a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="partnership" class="section-padding-safe bg-hayat-blue text-white">
+        <img 
+            src="images/one.png" 
+            alt="Hayat 1L Background Visual" 
+            class="side-bottle bg-bottle-3 d-none d-lg-block"
+            onerror="this.onerror=null; this.src='https://placehold.co/250x700/00b4d8/ffffff?text=1L';"
+        >
+        <div class="container text-center text-rtl">
+            <h2 class="display-5 fw-bold mb-3" data-aos="zoom-in">هل أنت مهتم بالشراكة معنا؟</h2>
+            <p class="lead mb-4" data-aos="fade-up">
+                <span class="text-hayat-orange fw-bold">كن موزعًا معتمدًا لحياة.</span> إذا كنت تمتلك متجرًا أو تود توصيل مياهنا النقية إلى عملائك، فنحن نرحب بالتعاون.
+            </p>
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+                    <div class="bg-white p-4 rounded-4 shadow-lg text-hayat-dark" data-aos="flip-up" data-aos-delay="200">
+                        <p class="fs-4 fw-bold mb-3"><i class="fas fa-handshake me-2 text-hayat-orange"></i> تواصل معنا للأعمال</p>
+                        <p class="mb-2">
+                            <i class="fas fa-phone me-2 text-hayat-blue"></i>
+                            <span class="fw-bold me-2">رقم الشراكات:</span> <a href="tel:+213500112233" class="text-hayat-dark text-decoration-none" style="direction: ltr; display: inline-block;">+213 (50) 011 22 33</a>
+                        </p>
+                        <p class="mb-0">
+                            <i class="fas fa-envelope me-2 text-hayat-blue"></i>
+                            <span class="fw-bold me-2">بريد الشراكات:</span> <a href="mailto:partnerships@hayatwater.com" class="text-hayat-dark text-decoration-none" style="direction: ltr; display: inline-block;">partnerships@hayatwater.com</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <footer id="contact" class="py-5 text-rtl">
+        <div class="container">
+            <div class="row flex-row-reverse">
+                <div class="col-md-4 mb-4 mb-md-0 text-md-end" data-aos="fade-up">
+                    <h5 class="fw-bold mb-3 text-hayat-orange">HAYAT | Source de Vie</h5>
+                    <p class="small text-white-50">التزامنا بتقديم أنقى مياه معبأة لحياة مليئة بالحيوية والنشاط.</p>
+                </div>
+
+                <div class="col-md-4 mb-4 mb-md-0 text-md-end" data-aos="fade-up" data-aos-delay="100">
+                    <h5 class="fw-bold mb-3">للتواصل معنا</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-2">
+                            <div class="d-flex justify-content-md-end align-items-center">
+                                <a href="#" class="text-white text-decoration-none text-end" style="direction: rtl;">
+                                    123 شارع منظر الجبل، مدينة المياه، و.ع 90210
+                                </a>
+                                <i class="fas fa-map-marker-alt ms-2 text-hayat-orange"></i>
+                            </div>
+                        </li>
+                        <li class="mb-2">
+                            <div class="d-flex justify-content-md-end align-items-center">
+                                <a href="tel:+1234567890" class="text-white text-decoration-none" style="direction: ltr;">
+                                    +1 (234) 567-890
+                                </a>
+                                <i class="fas fa-phone ms-2 text-hayat-orange"></i>
+                            </div>
+                        </li>
+                        <li class="mb-2">
+                            <div class="d-flex justify-content-md-end align-items-center">
+                                <a href="mailto:info@hayatwater.com" class="text-white text-decoration-none" style="direction: ltr;">
+                                    info@hayatwater.com
+                                </a>
+                                <i class="fas fa-envelope ms-2 text-hayat-orange"></i>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="col-md-4 text-md-end" data-aos="fade-up" data-aos-delay="200">
+                    <h5 class="fw-bold mb-3">تابعونا</h5>
+                    <div class="d-flex justify-content-md-end">
+                        <a href="https://web.facebook.com/hayat.source.de.vie" class="hero-social-icon" aria-label="فيسبوك"><i class="fab fa-facebook-f fa-lg"></i></a>
+                        <a href="https://www.instagram.com/hayat_source_de_vie?utm_source=ig_web_button_share_sheet&igsh=aGpocXR5b2pjMzU=" class="hero-social-icon" aria-label="انستغرام"><i class="fab fa-instagram fa-lg"></i></a>
+                        <a href="https://www.tiktok.com/@hayat_source_de_vie?_t=ZS-90CHpx0sTEA&_r=1" class="hero-social-icon" aria-label="تيك توك"><i class="fab fa-tiktok fa-lg"></i></a>
+                    
+                    </div>
+                </div>
+            </div>
+            <div class="text-center pt-4 border-top border-white-50 mt-4">
+                <p class="small mb-0 text-white-50" style="direction: ltr;">&copy; 2025 Hayat Water Company. All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        // Initialize AOS library for scroll reveal animations
+        AOS.init({
+            duration: 1200, // global duration for animations
+            once: true // animations only happen once on first scroll
+        });
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Add a check on window load to apply the safe padding to sections with curved transitions
+        window.onload = function() {
+            const sections = document.querySelectorAll('#benefits, #source, #products, #partnership');
+            sections.forEach(section => {
+                // Ensure section-padding-safe class exists in the generated HTML for safety
+                if (!section.classList.contains('section-padding-safe')) {
+                    section.classList.add('section-padding-safe');
+                }
+            });
+        };
+    </script>
+</body>
+</html>
